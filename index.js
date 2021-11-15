@@ -23,6 +23,7 @@ async function run(){
             const bikesCollection = database.collection('bicycles')
             const usersCollection = database.collection('users')
             const ordersCollection = database.collection('orders')
+            const reviewsCollection = database.collection('reviews')
           
 
           //GET PLACE ORDERS API
@@ -38,7 +39,6 @@ async function run(){
           app.post('/placeOrders', async(req, res)=>{
               const booking = req.body;
               const result = await ordersCollection.insertOne(booking);
-              console.log(result);
               res.json(result);
           })
 
@@ -54,7 +54,6 @@ async function run(){
             const query = {_id: ObjectId(id)};
             const result = await ordersCollection.deleteOne(query);
             res.json(result);
-            console.log(result);
           })
 
           //DELETE MY ORDER
@@ -63,14 +62,12 @@ async function run(){
               const query = {_id: ObjectId(id)};
               const result = await ordersCollection.deleteOne(query);
               res.json(result);
-              console.log(result);
           })
 
           //GET PRODUCT API
           app.get('/addProduct', async(req, res)=>{
             const cursor = bikesCollection.find({});
             const products = await cursor.toArray();
-            console.log(products);
             res.json(products);
           })
           
@@ -80,7 +77,6 @@ async function run(){
             const query = {_id: ObjectId(id)};
             const result = await bikesCollection.deleteOne(query);
             res.json(result);
-            console.log(result);
         })
 
           //GET SINGLE PRODUCT
@@ -94,7 +90,6 @@ async function run(){
           app.post('/addProduct', async(req, res)=>{
             const add = req.body;
             const result = await bikesCollection.insertOne(add);
-            console.log(result);
             res.json(result);
         })
 
@@ -115,7 +110,6 @@ async function run(){
           app.post('/users', async(req, res)=>{
               const user = req.body;
               const result = await usersCollection.insertOne(user);
-              console.log(result);
               res.json(result);
           })
 
@@ -133,6 +127,19 @@ async function run(){
               const filter = {email: user.email};
               const updateDoc = { $set: {role: 'admin'}};
               const result = await usersCollection.updateOne(filter, updateDoc);
+              res.json(result);
+          })
+
+          //REVIEW API
+          app.post('/review', async(req, res)=>{
+              const reviews = await reviewsCollection.insertOne(req.body)
+              res.json(reviews);
+              console.log(reviews);
+          })
+
+          //REVIWS GET
+          app.get('/review', async(req, res)=>{
+              const result = await reviewsCollection.find({}).toArray();
               res.json(result);
           })
 
@@ -154,12 +161,3 @@ app.listen(port, () => {
 })
 
 
-{/* <Rating
-  initialRating={2.5}
-  readonly
-  emptySymbol="fas fa-star"
-  fullSymbol="fa fa-thumbs-up fa-2x"
-/>
-
-
-<i class="fas fa-star"></i> */}
